@@ -321,7 +321,7 @@ from ansible.module_utils.ec2 import ec2_connect, ec2_argument_spec, ansible_dic
 
 import time
 import traceback
-from ansible.module_utils.ec2 import get_aws_connection_info, ec2_argument_spec, ec2_connect, boto3_conn, camel_dict_to_snake_dict, HAS_BOTO3
+from ansible.module_utils.ec2 import get_aws_connection_info, ec2_argument_spec, ec2_connect, boto3_conn, camel_dict_to_snake_dict, HAS_BOTO3, AWSRetry
 from ansible.module_utils.basic import AnsibleModule
 
 try:
@@ -378,6 +378,7 @@ def get_ami_info(camel_image):
     )
 
 
+@AWSRetry.backoff(tries=5, delay=5, backoff=2.0)
 def create_image(module, connection, resource):
     instance_id = module.params.get('instance_id')
     name = module.params.get('name')
@@ -497,6 +498,7 @@ def create_image(module, connection, resource):
     module.exit_json(msg="AMI creation operation complete.", changed=True, **get_ami_info(image))
 
 
+@AWSRetry.backoff(tries=5, delay=5, backoff=2.0)
 def deregister_image(module, connection):
     image_id = module.params.get('image_id')
     delete_snapshot = module.params.get('delete_snapshot')
@@ -549,6 +551,7 @@ def deregister_image(module, connection):
     module.exit_json(**exit_params)
 
 
+@AWSRetry.backoff(tries=5, delay=5, backoff=2.0)
 def update_image(module, connection, image_id, resource):
     launch_permissions = module.params.get('launch_permissions') or []
 
@@ -593,6 +596,7 @@ def update_image(module, connection, image_id, resource):
         module.fail_json(msg="Error updating image - " + str(e), exception=traceback.format_exc(), **camel_dict_to_snake_dict(e.response))
 
 
+@AWSRetry.backoff(tries=5, delay=5, backoff=2.0)
 def get_image_by_id(module, connection, image_id):
     try:
         images_response = connection.describe_images(ImageIds=[image_id])
