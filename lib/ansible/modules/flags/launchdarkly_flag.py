@@ -65,9 +65,7 @@ EXAMPLES = r'''
     targets: { environment: 'production', on: True}
 '''
 
-import os
 import inspect
-import time
 import traceback
 
 LD_IMP_ERR = None
