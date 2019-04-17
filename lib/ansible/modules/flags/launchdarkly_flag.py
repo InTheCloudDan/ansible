@@ -16,7 +16,7 @@ ANSIBLE_METADATA = {
 
 DOCUMENTATION = r'''
 ---
-module: launchdarkly
+module: launchdarkly_flag
 short_description: Interact with projects, flags of LaunchDarkly
 description:
      - Manage LaunchDarkly manage feature flags and account settings.
@@ -154,8 +154,9 @@ def main():
         _add_flag(module, configuration, api_instance, operations, **kwargs)
     elif module.params['state'] == 'absent':
         _delete_flag(module, configuration, api_instance, **kwargs)
+    #Not enabled yet.
     elif module.params['state'] == 'enabled' or module.params['state'] == 'disabled':
-        toggle_flag(module,configuration,api_instance, **operations)
+        toggle_flag(module, configuration, api_instance, operations)
 
 
 def _add_flag(module, configuration, api_instance, operations, **kwargs):
@@ -224,6 +225,7 @@ def toggle_flag(module):
     print(module)
 
 
+# Inspect the function signature to only pass in the required parameters.
 def _clean_api_calls(api_call, **kwargs):
     api_args = inspect.getargspec(api_call).args
     for key in list(kwargs):
@@ -238,6 +240,7 @@ def _build_variations(**kwargs):
         variation_list.append(launchdarkly_api.Variation(value=item))
     return variation_list
 
+
 def _parse_config(config):
     print(config)
     #
@@ -245,20 +248,6 @@ def _parse_config(config):
         config['on'] = True
     else:
         config['on'] = False
-
-
-
-    # archived
-    # salt
-    # sel
-    # last_modified
-    # version
-    # targets
-    # rules
-    # fallthrough
-    # off_variation
-    # prerequisites
-    # track_events
 
 if __name__ == '__main__':
     main()
