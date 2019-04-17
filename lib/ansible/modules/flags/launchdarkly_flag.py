@@ -86,8 +86,7 @@ from ansible.module_utils.six import PY2, iteritems, string_types
 
 def main():
     mutually_exclusive=[
-    ['clone', 'include_in_snippet'],['clone', 'state'],['clone','tags']
-
+        ['clone', 'include_in_snippet'],['clone', 'state'],['clone','tags']
     ]
 
     module = AnsibleModule(
