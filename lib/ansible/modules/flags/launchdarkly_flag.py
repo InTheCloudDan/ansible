@@ -80,13 +80,10 @@ except ImportError:
     LD_IMP_ERR = traceback.format_exc()
     HAS_LD = False
 
-
-
 from ansible.module_utils.basic import AnsibleModule, missing_required_lib
 from ansible.module_utils._text import to_native
 from ansible.module_utils.common._json_compat import json
 from ansible.module_utils.six import PY2, iteritems, string_types
-
 
 
 def main():
@@ -167,11 +164,11 @@ def _add_flag(module, configuration, api_instance, operations, **kwargs):
         ffb_kwargs['variations'] = [launchdarkly_api.Variation(value=True), launchdarkly_api.Variation(value=False)]
     elif module.params['type'] == 'json':
         # No easy way to check isinstance json
-        fbb_kwargs['variations'] = _build_variations(**ffb_kwargs)
+        ffb_kwargs['variations'] = _build_variations(**ffb_kwargs)
     elif module.params['type'] == 'str':
         if not all(isinstance(item, str) for item in module.params['variations']):
             module.exit_json(msg="Variations need to all be strings")
-        ffb_kwargs['variations'] = _build_variations(**fbb_kwargs)
+        ffb_kwargs['variations'] = _build_variations(**ffb_kwargs)
     elif module.params['type'] == 'number':
         if not all(isinstance(item, int) for item in module.params['variations']):
             module.exit_json(msg="Variations need to all be integers")
